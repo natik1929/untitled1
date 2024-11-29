@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Максимальная прибыль</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 30px;
+        }
+        h1 {
+            color: #0d6efd;
+        }
+        .input-group {
+            max-width: 500px;
+            margin: 0 auto 20px;
+        }
+        #entries {
+            margin-top: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        #result {
+            font-size: 1.2em;
+            color: #198754;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Калькулятор максимальной прибыли</h1>
+
+    <div class="input-group mb-3">
+        <input type="text" id="inputField" class="form-control" placeholder="Введите товар и прибыль (например: Книга, 500)" aria-label="Input">
+        <button class="btn btn-primary" onclick="addEntry()">Добавить</button>
+    </div>
+
+    <div id="entries" class="alert alert-light" role="alert">
+        <strong>Добавленные товары:</strong>
+        <div id="entriesList"></div>
+    </div>
+
+    <button class="btn btn-success" onclick="calculateMaxProfit()">Показать товар с максимальной прибылью</button>
+
+    <div id="result"></div>
+
+    <script>
+        let data = []; // Хранилище для записей о товарах и их прибыли
+
+        // Функция для добавления записи о товаре
+        function addEntry() {
+            const input = document.getElementById('inputField').value.trim(); // Получаем текст из поля ввода
+
+            // Если ввели "END", сразу рассчитываем результат
+            if (input.toUpperCase() === "END") {
+                calculateMaxProfit();
+                return;
+            }
+
+            // Проверка корректности ввода
+            if (input !== "") {
+                const entry = input.split(','); // Разделяем ввод на название товара и прибыль
+                if (entry.length === 2 && !isNaN(parseInt(entry[1].trim()))) {
+                    const item = entry[0].trim(); // Название товара
+                    const profit = parseInt(entry[1].trim()); // Прибыль
+
+                    data.push({ name: item, profit: profit }); // Добавляем данные в массив
+                    const entryDiv = document.createElement('div'); // Создаем элемент для отображения записи
+                    entryDiv.innerText = `${item}, ${profit}₽`;
+                    document.getElementById('entriesList').appendChild(entryDiv); // Добавляем запись в список на странице
+
+                    document.getElementById('inputField').value = ""; // Очищаем поле ввода
+                } else {
+                    alert("Ошибка ввода. Введите данные в формате: Товар, Прибыль.");
+                }
+            }
+        }
+
+        // Функция для расчета товара с максимальной прибылью
+        function calculateMaxProfit() {
+            const profitMap = {}; // Объект для хранения общей прибыли по каждому товару
+
+            // Группировка данных по товарам и подсчет общей прибыли
+            data.forEach(entry => {
+                if (profitMap[entry.name]) {
+                    profitMap[entry.name] += entry.profit; // Суммируем прибыль для уже добавленного товара
+                } else {
+                    profitMap[entry.name] = entry.profit; // Создаем новую запись для нового товара
+                }
+            });
+
+            let maxProfit = -Infinity; // Храним максимальную прибыль
+            let maxItem = ''; // Храним название товара с максимальной прибылью
+
+            // Поиск товара с наибольшей прибылью
+            for (const [item, profit] of Object.entries(profitMap)) {
+                if (profit > maxProfit) {
+                    maxProfit = profit;
+                    maxItem = item;
+                }
+            }
+
+            // Отображение результата
+            document.getElementById('result').innerHTML = `<p>Товар с максимальной прибылью: <strong>${maxItem}</strong>, прибыль: <strong>${maxProfit}₽</strong></p>`;
+        }
+    </script>
+</body>
+</html>

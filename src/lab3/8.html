@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статистика концертов 2023</title>
+    <style>
+        /* Общие стили для страницы */
+        body {
+            font-family: 'Verdana', sans-serif;
+            text-align: center;
+            background-color: #f0f8ff;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Стили для заголовка */
+        h1 {
+            background-color: #4682b4;
+            color: white;
+            padding: 20px;
+            margin: 0;
+        }
+
+        /* Стили для текстового поля и кнопки */
+        textarea, button {
+            font-size: 1em;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        textarea {
+            width: 80%;
+            height: 150px;
+            padding: 10px;
+            resize: none;
+        }
+
+        button {
+            background-color: #4682b4;
+            color: white;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #5a9bd5;
+        }
+
+        /* Стили для текста результата */
+        p {
+            font-size: 1.2em;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Найти группу с самым большим количеством концертов</h1>
+    <textarea id="concertsInput" placeholder="Введите данные в формате: Название группы, ДД.ММ.ГГГГ"></textarea><br>
+    <button onclick="findGroup()">Найти</button>
+    <p id="result"></p>
+
+    <script>
+        function findGroup() {
+            // Получаем данные из текстового поля и разбиваем их по строкам
+            const input = document.getElementById('concertsInput').value.trim().split('\n');
+            const concertCount = {}; // Объект для хранения количества концертов по группам
+            let ended = false;
+
+            for (let i = 0; i < input.length; i++) {
+                const line = input[i].trim();
+
+                // Если встретился маркер "END", прекращаем обработку
+                if (line === 'END') {
+                    ended = true;
+                    break;
+                }
+
+                // Разбиваем строку на название группы и дату
+                const parts = line.split(', ');
+                if (parts.length !== 2) {
+                    document.getElementById('result').textContent = `Ошибка: неверный формат в строке ${i + 1}`;
+                    return;
+                }
+
+                const group = parts[0];
+                const date = parts[1];
+
+                // Проверяем корректность формата даты
+                const datePattern = /^\d{2}\.\d{2}\.\d{4}$/;
+                if (!datePattern.test(date)) {
+                    document.getElementById('result').textContent = `Ошибка: неверный формат даты в строке ${i + 1}`;
+                    return;
+                }
+
+                // Проверяем, что год указан как 2023
+                const year = date.split('.')[2];
+                if (year === '2023') {
+                    if (concertCount[group]) {
+                        concertCount[group]++;
+                    } else {
+                        concertCount[group] = 1;
+                    }
+                }
+            }
+
+            // Если маркер окончания "END" не найден, выводим ошибку
+            if (!ended) {
+                document.getElementById('result').textContent = 'Ошибка: отсутствует строка "END".';
+                return;
+            }
+
+            // Находим группу с наибольшим количеством концертов
+            let maxConcerts = 0;
+            let bestGroup = '';
+            for (const group in concertCount) {
+                if (concertCount[group] > maxConcerts) {
+                    maxConcerts = concertCount[group];
+                    bestGroup = group;
+                }
+            }
+
+            // Выводим результат
+            document.getElementById('result').textContent = bestGroup
+                ? `Группа с наибольшим количеством концертов: ${bestGroup} (${maxConcerts} концертов)`
+                : 'Концерты не найдены.';
+        }
+    </script>
+</body>
+</html>
+

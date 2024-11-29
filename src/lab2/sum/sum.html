@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Банковский счет</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Банковский счет</h1>
+        <form id="bankForm">
+            <label for="amount">Введите сумму:</label>
+            <input type="number" id="amount" required>
+            <label for="operation">Выберите операцию:</label>
+            <select id="operation" required>
+                <option value="внести">Внести</option>
+                <option value="снять">Снять</option>
+            </select>
+            <button type="submit">Выполнить операцию</button>
+        </form>
+        <p id="result"></p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

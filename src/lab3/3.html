@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подсчет среднего балла</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- Карточка с вводом данных -->
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h5> Средний балл учеников</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Ввод имен -->
+                    <label for="names" class="form-label">Введите имена учеников через запятую и пробел:</label>
+                    <input type="text" id="names" class="form-control mb-3" placeholder="Например: Катя, Антон, Вика">
+                    
+                    <!-- Ввод оценок -->
+                    <label for="grades" class="form-label">Введите оценки учеников через пробел (каждая группа оценок через дефис):</label>
+                    <input type="text" id="grades" class="form-control mb-3" placeholder="Например: 60-50-11 38-25-29 24-88-39">
+
+                    <!-- Кнопка подсчета -->
+                    <button onclick="calculateLowest()" class="btn btn-primary w-100">Найти самого отстающего ученика</button>
+                </div>
+            </div>
+
+            <!-- Карточка с результатом -->
+            <div class="card shadow mt-4">
+                <div class="card-header bg-danger text-white text-center">
+                    <h5>Результат</h5>
+                </div>
+                <div class="card-body text-center">
+                    <p id="result" class="fs-5">Результат будет отображен здесь.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function calculateLowest() {
+        // Получаем список имен учеников
+        let namesInput = document.getElementById('names').value.split(', ').map(name => name.trim());
+
+        // Получаем наборы оценок
+        let gradesInput = document.getElementById('grades').value.split(' ');
+
+        // Проверяем, введены ли данные
+        if (namesInput.length === 0 || gradesInput.length === 0) {
+            document.getElementById('result').innerText = 'Пожалуйста, введите имена и оценки.';
+            return;
+        }
+
+        // Проверяем, чтобы количество учеников совпадало с количеством наборов оценок
+        if (namesInput.length !== gradesInput.length) {
+            document.getElementById('result').innerText = 'Количество учеников должно совпадать с количеством наборов оценок.';
+            return;
+        }
+
+        // Проверяем на уникальность имен
+        let uniqueNames = new Set(namesInput);
+        if (uniqueNames.size !== namesInput.length) {
+            document.getElementById('result').innerText = 'Имена учеников должны быть уникальными.';
+            return;
+        }
+
+        let lowestAverage = Infinity; // Минимальное среднее значение
+        let lowestStudent = ''; // Имя ученика с минимальным средним баллом
+
+        // Обрабатываем оценки каждого ученика
+        for (let i = 0; i < namesInput.length; i++) {
+            let grades = gradesInput[i].split('-').map(Number); // Разбиваем оценки текущего ученика на массив чисел
+
+            // Проверяем, чтобы каждая группа оценок содержала 3 числовых значения
+            if (grades.length !== 3 || grades.some(isNaN)) {
+                document.getElementById('result').innerText = 'Каждый ученик должен иметь три числовых оценки.';
+                return;
+            }
+
+            // Вычисляем средний балл
+            let average = grades.reduce((a, b) => a + b, 0) / grades.length;
+
+            // Обновляем минимальное значение и имя, если текущий средний балл меньше
+            if (average < lowestAverage) {
+                lowestAverage = average;
+                lowestStudent = namesInput[i];
+            }
+        }
+
+        // Выводим результат
+        document.getElementById('result').innerText = `Самый отстающий ученик: ${lowestStudent}`;
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Город: Проверка</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            color: #2c3e50;
+            text-align: center;
+            padding: 30px;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        input {
+            padding: 10px;
+            width: 250px;
+            border: 2px solid #2c3e50;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            border: none;
+            background-color: #2980b9;
+            color: white;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #3498db;
+        }
+        p {
+            font-size: 1.2em;
+            margin-top: 15px;
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Город: Проверка</h1>
+    <p>Укажите название города:</p>
+    <input type="text" id="cityInput" placeholder="Например, Екатеринбург">
+    <button onclick="checkCity()">Узнать</button>
+    <p id="result"></p>
+
+    <script>
+        // Список доступных городов
+        const cities = ["Москва", "Санкт-Петербург", "Саратов", "Магадан", "Ярославль", "Самара", "Якутск"];
+
+        function checkCity() {
+            const inputCity = document.getElementById('cityInput').value.trim(); // Получаем и обрабатываем ввод пользователя
+            const resultElement = document.getElementById('result'); // Элемент для отображения результата
+
+            // Проверяем, есть ли город в списке
+            if (cities.includes(inputCity)) {
+                const firstLetter = inputCity[0].toUpperCase(); // Берём первую букву города в верхнем регистре
+                const matchingCities = cities.filter(city => city[0].toUpperCase() === firstLetter); // Находим города с той же первой буквой
+                resultElement.textContent = `Города, начинающиеся на "${firstLetter}": ${matchingCities.join(', ')}`;
+            } else {
+                resultElement.textContent = 'К сожалению, такого города нет в списке.';
+            }
+        }
+    </script>
+
+</body>
+</html>

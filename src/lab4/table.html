@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Таблица с сортировкой</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1> Таблица с сортировкой</h1>
+    <div>
+        <label for="sortField">Сортировать по:</label>
+        <select id="sortField">
+            <option value="name">Имя</option>
+            <option value="price">Цена</option>
+            <option value="rating">Рейтинг</option>
+        </select>
+        <button id="sortAsc">По возрастанию</button>
+        <button id="sortDesc">По убыванию</button>
+    </div>
+    <div id="dataContainer"></div>
+    <script src="script.js"></script>
+</body>
+</html>

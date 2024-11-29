@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+ <meta charset="UTF-8">
+ <title>Каталог Продуктов</title>
+ <style>
+   body {
+     font-family: 'Arial', sans-serif;
+     background-color: #f5f5f5;
+     margin: 0;
+     padding: 20px;
+     color: #333;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     flex-direction: column;
+   }
+   
+   h1 {
+     color: #2c3e50;
+     margin-bottom: 20px;
+   }
+
+   table {
+     width: 80%;
+     max-width: 800px;
+     margin: 20px 0;
+     border-collapse: collapse;
+     background-color: #fff;
+     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+     border-radius: 8px;
+     overflow: hidden;
+   }
+
+   th {
+     background-color: #2ecc71;
+     color: white;
+     padding: 15px;
+     text-transform: uppercase;
+     letter-spacing: 1px;
+     font-size: 14px;
+   }
+
+   td {
+     padding: 15px;
+     text-align: center;
+     border-bottom: 1px solid #ddd;
+   }
+
+   td:last-child {
+     font-weight: bold;
+   }
+
+   tr:nth-child(even) {
+     background-color: #f2f2f2;
+   }
+
+   tr:hover {
+     background-color: #f9f9f9;
+   }
+
+   button {
+     padding: 8px 12px;
+     margin: 0 5px;
+     background-color: #3498db;
+     color: white;
+     border: none;
+     border-radius: 4px;
+     cursor: pointer;
+     transition: background-color 0.3s;
+   }
+
+   button:hover {
+     background-color: #2980b9;
+   }
+
+   #itog {
+     font-size: 20px;
+     color: #e74c3c;
+   }
+
+   h2 {
+     margin-top: 20px;
+   }
+ </style>
+</head>
+ 
+<script>
+var products = [
+  { name: "Хлеб", price: 50 },
+  { name: "Молоко", price: 80 },
+  { name: "Яблоки", price: 120 },
+  { name: "Сыр", price: 300 },
+  { name: "Куриное филе", price: 250 },
+  { name: "Яйца", price: 50 },
+  { name: "Сахар", price: 70 }
+];
+
+function plus(n) {
+  var cena = document.getElementById("cena_" + n);
+  var col = document.getElementById("col_" + n);
+  var cenap = document.getElementById("cenap_" + n);
+  var itog = document.getElementById("itog");
+
+  col.innerHTML = 1 + Number(col.innerHTML);
+  cenap.innerHTML = Number(cenap.innerHTML) + Number(cena.innerHTML);
+  itog.innerHTML = Number(itog.innerHTML) + Number(cena.innerHTML);
+}
+
+function minus(n) {
+  var cena = document.getElementById("cena_" + n);
+  var col = document.getElementById("col_" + n);
+  var cenap = document.getElementById("cenap_" + n);
+  var itog = document.getElementById("itog");
+
+  if (col.innerHTML != "0") {
+    col.innerHTML = Number(col.innerHTML) - 1;
+    cenap.innerHTML = Number(cenap.innerHTML) - Number(cena.innerHTML);
+    itog.innerHTML = Number(itog.innerHTML) - Number(cena.innerHTML);
+  }
+}
+
+function generateTable() {
+  var tableContent = "";
+  for (var i = 0; i < products.length; i++) {
+    tableContent += `
+      <tr>
+        <td>${products[i].name}</td>
+        <td><b id="cena_${i}">${products[i].price}</b> руб.</td>
+        <td>
+          <button onclick="plus(${i})">+</button> 
+          <b id="col_${i}">0</b> шт. 
+          <button onclick="minus(${i})">-</button>
+        </td>
+        <td><b id="cenap_${i}">0</b> руб.</td>
+      </tr>`;
+  }
+  document.getElementById("productTable").innerHTML = tableContent;
+}
+
+window.onload = function() {
+  generateTable();
+};
+</script>
+ 
+<body>
+ <h1>Каталог Продуктов</h1>
+ <table>
+  <thead>
+    <tr>
+      <th>Продукт</th>
+      <th>Цена за 1 шт</th>
+      <th>Количество</th>
+      <th>Цена за всё</th>
+    </tr>
+  </thead>
+  <tbody id="productTable">
+  </tbody>
+ </table>
+
+ <h2>ИТОГО: <b id="itog">0</b> руб.</h2>
+</body>
+</html>

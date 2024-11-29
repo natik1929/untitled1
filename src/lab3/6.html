@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Цены на продукты</title>
+    <style>
+        body {
+            background-color: #e9f7ef;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        h3 {
+            color: #198754;
+        }
+        .table {
+            margin: 20px auto;
+            max-width: 80%;
+        }
+        .btn {
+            margin-top: 20px;
+        }
+        h5 {
+            margin-top: 20px;
+            color: #0d6efd;
+        }
+    </style>
+</head>
+<body>
+    <h3>Сравнение цен на продукты</h3>
+    <table class="table table-bordered table-hover" id="mytable"></table>
+    <button class="btn btn-success" onclick="makeCostCard()">Рассчитать цены</button>
+
+    <script>
+        function makeCostCard() {
+            if (document.querySelector('tbody')) {
+                document.querySelector('tbody').remove(); // Удаляем старые данные из таблицы
+            }
+
+            let table = document.getElementById("mytable");
+            let tbody = document.createElement("tbody");
+
+            // Создание заголовков таблицы
+            let colNames = ['Продукт', 'Магазин 1', 'Магазин 2', 'Магазин 3', 'Средняя цена'];
+            let tr = document.createElement('tr');
+            colNames.forEach(name => {
+                let th = document.createElement('th');
+                th.innerText = name;
+                tr.appendChild(th);
+            });
+            tbody.appendChild(tr);
+
+            // Запрос данных у пользователя
+            let inputData = prompt('Введите данные о продуктах в формате: продукт1:цена1,цена2,цена3; продукт2:цена1,цена2,цена3').split('; ');
+            let bestAvgPrice = Infinity;
+            let bestProduct = '';
+            let flagError = false;
+
+            // Обработка данных
+            inputData.forEach(data => {
+                let tr = document.createElement('tr');
+                let [product, prices] = data.split(':');
+                let priceList = prices.split(',').map(price => parseFloat(price.trim()));
+                let avgPrice = 0;
+
+                for (let j = -1; j < 4; j++) {
+                    let td = document.createElement('td');
+                    if (j === -1) {
+                        td.innerText = product; // Название продукта
+                    } else if (j >= priceList.length && j < 3) {
+                        td.innerText = 0; // Заполняем 0 для отсутствующих значений
+                        flagError = true;
+                    } else if (j === 3) {
+                        avgPrice /= 3;
+                        td.innerText = avgPrice.toFixed(2); // Средняя цена
+                        if (avgPrice < bestAvgPrice) {
+                            bestAvgPrice = avgPrice;
+                            bestProduct = product;
+                        }
+                    } else {
+                        let price = priceList[j];
+                        if (isNaN(price) || price < 0) {
+                            td.innerText = 0; // Ошибочные данные заменяем на 0
+                            flagError = true;
+                        } else {
+                            td.innerText = price.toFixed(2);
+                            avgPrice += price;
+                        }
+                    }
+                    tr.appendChild(td);
+                }
+                tbody.appendChild(tr);
+            });
+
+            if (flagError) {
+                alert("Некоторые значения введены неверно или отсутствуют. Ошибочные значения заменены на 0.");
+            }
+
+            // Отображение самого дешевого продукта
+            let result = document.createElement("h5");
+            result.innerText = `Самый выгодный продукт: ${bestProduct} со средней ценой ${bestAvgPrice.toFixed(2)}₽`;
+            document.body.appendChild(result);
+
+            table.appendChild(tbody);
+        }
+    </script>
+</body>
+</html>

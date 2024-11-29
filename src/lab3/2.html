@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Игра "Угадайка"</title>
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <!-- Карточка с интервалом -->
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h5>Угадай число</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="card-title">Задайте интервал:</h6>
+                        <label for="from" class="form-label">От:</label>
+                        <input class="form-control mb-3" id="from" type="number" placeholder="Минимальное число">
+                        
+                        <label for="to" class="form-label">До:</label>
+                        <input class="form-control mb-3" id="to" type="number" placeholder="Максимальное число">
+                        
+                        <button class="btn btn-primary w-100" onclick="makeNumber()">Загадать число</button>
+                    </div>
+                </div>
+
+                <!-- Карточка с баллами -->
+                <div class="card mt-4 shadow">
+                    <div class="card-header bg-success text-white text-center">
+                        <h5>Ваши баллы</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <h1 id="counter" class="display-3">0</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function makeNumber() {
+            const from = Number(document.getElementById('from').value);
+            const to = Number(document.getElementById('to').value);
+            const counter = document.getElementById('counter');
+            
+            // Проверка корректности интервала
+            if (isNaN(from) || isNaN(to) || from >= to) {
+                alert("Введите корректный диапазон!");
+                return;
+            }
+
+            const answer = Math.floor(Math.random() * (to - from + 1)) + from;
+            alert("Число загадано! Угадайте его.");
+            
+            // Система попыток
+            for (let attempts = 3; attempts > 0; attempts--) {
+                const userAnswer = prompt(`Попытка ${4 - attempts}/3: Введите число:`);
+                if (userAnswer === null) break; // Пользователь нажал "Отмена"
+
+                if (Number(userAnswer) === answer) {
+                    const points = attempts === 3 ? 2 : 1;
+                    alert(`Поздравляем! Вы угадали число! Вы получаете ${points} балл(а).`);
+                    counter.innerText = Number(counter.innerText) + points;
+                    return;
+                } else if (attempts > 1) {
+                    alert(`Неверно! Осталось попыток: ${attempts - 1}`);
+                } else {
+                    alert(`Вы проиграли. Загаданное число: ${answer}`);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
